@@ -1,6 +1,6 @@
 import seiscomp3.Logging as logging
 import requests
-import configFaceTweet as cfg
+import config_utilities as cfg
 
 
 def short_url(long_url):
