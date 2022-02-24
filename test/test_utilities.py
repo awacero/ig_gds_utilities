@@ -1,4 +1,4 @@
-import ig_utilities as u
+from ig_gds_utilities import ig_utilities as u
 import config_utilities as cfg
 from datetime import datetime
 
