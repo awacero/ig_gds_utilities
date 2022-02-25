@@ -1,20 +1,23 @@
-import setuptools
+
+from setuptools import setup,find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 
-setuptools.setup(
+setup(
      name='ig_gds_utilities',  
      version='0.1',
-     packages=['ig_gds_utilities'] ,
+     packages=(
+     find_packages(exclude=['*config_utilities.py'])),
+     data_files=[('./ig_gds_utilities/config_utilities_EXAMPLE.cfg')],
      author="Wilson Acero",
      author_email="acerowilson@gmail.com",
      description="Python library to be used by differente GDS services",
      long_description=long_description,
-   long_description_content_type="text/markdown",
+     long_description_content_type="text/markdown",
      url="https://github.com/awacero/ig_gds_utilities",
-     #packages=setuptools.find_packages(),
+     
      install_requires = ['requests>=2.22.0'],
      classifiers=[
          "Programming Language :: Python :: 3",

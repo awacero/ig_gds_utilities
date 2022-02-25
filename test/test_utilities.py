@@ -1,5 +1,4 @@
 from ig_gds_utilities import ig_utilities as u
-import config_utilities as cfg
 from datetime import datetime
 
 
@@ -12,6 +11,7 @@ expected_short_url = "https://bit.ly/2rLlW6L"
 def test_short_url():
     
     test_url = u.short_url(original_url)
+    print(test_url)
     assert test_url == expected_short_url, "ERROR in test_short_url()"
 
 
@@ -29,9 +29,10 @@ expected_arcgis_url = "https://bit.ly/3mTk9tD"
 def test_get_survey_url():
     test_survey_url = u.get_survey_url(event_datetime,event_id)
 
-    if cfg.survey_type == "arcgis":
+    #if cfg.survey_type == "arcgis":
+    try:
         assert expected_arcgis_url == test_survey_url, "ERROR in test_get_survey_url, arcgis"
-    else :
+    except :
         assert expected_google_url == test_survey_url, "ERROR in test_get_survey_url, google"
 
 
@@ -54,9 +55,11 @@ def test_get_message_by_country_twitter():
 
 
     
-"""
+
 test_short_url()
 test_get_closest_city()
+"""
+
 test_get_message_by_country()
 test_get_survey_url()
 """ 
