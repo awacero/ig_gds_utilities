@@ -55,10 +55,10 @@ def test_get_message_by_country_twitter():
 
 
     
-
+"""
 test_short_url()
 test_get_closest_city()
-"""
+
 
 test_get_message_by_country()
 test_get_survey_url()
