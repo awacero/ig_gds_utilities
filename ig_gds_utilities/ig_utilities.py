@@ -189,12 +189,8 @@ def generate_google_map(latitud,longitud,event_info):
         if os.path.isfile(image_path):
             os.remove(image_path)
         map_image_url = "%s|%s,%s&key=%s" %(google_url,latitud,longitud,google_key)
-        print(map_image_url)
-        #buffer = StringIO(urllib.request.urlopen(map_image_url).read())
         buffer = BytesIO(urllib.request.urlopen(map_image_url).read())
-        print(buffer)
         map_image = Image.open(buffer)
-        #map_image.convert('RGB')
         map_image.convert('RGB').save(image_path)
         return True
     except Exception as e:
@@ -202,3 +198,36 @@ def generate_google_map(latitud,longitud,event_info):
         print(("Error while creating a googlemap image:%s" %str(e)))
         return False 
 
+
+def generate_gis_map(latitud,longitud,event_info):
+
+
+    """
+    This function generate a JPG of the epicenter of an earthquake
+    If something goes wrong, returns a False so the caller can invoque another
+    function to handle the map creation.  
+    """
+    margin_degree = 1
+    image_size = 512
+    cfg = read_parameters(config_path)
+    gempa_gis_url =  cfg['ig_info']['gempa_gis_url']
+    eqevent_path = cfg['ig_info']['eqevent_page_path']
+
+    try:
+        image_path = os.path.join(eqevent_path,'%s/%s-map.jpg' %(event_info['event_id'],event_info['event_id']))
+        if os.path.isfile(image_path):
+            os.remove(image_path)
+
+        #map_image_url = "%s|%s,%s&key=%s" %(gempa_gis_url,latitud,longitud,google_key)
+        
+        map_image_url = "{0}/map?reg={1},{2},{3},{3}&ori={1},{2}&dim={4},{4}".format(
+            gempa_gis_url,latitud,longitud,margin_degree,image_size)
+        buffer = BytesIO(urllib.request.urlopen(map_image_url).read())
+        map_image = Image.open(buffer)
+        map_image.convert('RGB').save(image_path)
+
+        return True
+    except Exception as e:
+        logging.error("Error while creating a gis map image:%s" %str(e))
+        print(("Error while creating a gis map image:%s" %str(e)))
+        return False 

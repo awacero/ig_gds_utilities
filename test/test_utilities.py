@@ -64,10 +64,16 @@ def test_generate_google_map():
     print(expected_value)
 
 
+def test_generate_gis_map():
 
-test_generate_google_map()
+    expected_value = u.generate_gis_map(latitud,longitud,event_info)
+
+    print(expected_value)
+
+test_generate_gis_map()
 
 """
+test_generate_google_map()
 test_short_url()
 test_get_closest_city()
 
