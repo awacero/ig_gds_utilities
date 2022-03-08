@@ -1,3 +1,6 @@
+from io import StringIO, BytesIO
+from PIL import Image
+import urllib
 
 try:
     import seiscomp3.Logging as logging
@@ -169,4 +172,33 @@ def get_message_by_country_twitter(latitud,longitud):
         logging.error(msg_error)
         return '---'
 
+def generate_google_map(latitud,longitud,event_info):
+
+    """
+    This function generate a JPG of the epicenter of an earthquake
+    If something goes wrong, returns a False so the caller can invoque another
+    function to handle the map creation.  
+    """
+    cfg = read_parameters(config_path) 
+    google_key =  cfg['ig_info']['google_key']
+    google_url =  cfg['ig_info']['google_url']
+    eqevent_path = cfg['ig_info']['eqevent_page_path']
+
+    try:
+        image_path = os.path.join(eqevent_path,'%s/%s-map.jpg' %(event_info['event_id'],event_info['event_id']))
+        if os.path.isfile(image_path):
+            os.remove(image_path)
+        map_image_url = "%s|%s,%s&key=%s" %(google_url,latitud,longitud,google_key)
+        print(map_image_url)
+        #buffer = StringIO(urllib.request.urlopen(map_image_url).read())
+        buffer = BytesIO(urllib.request.urlopen(map_image_url).read())
+        print(buffer)
+        map_image = Image.open(buffer)
+        #map_image.convert('RGB')
+        map_image.convert('RGB').save(image_path)
+        return True
+    except Exception as e:
+        logging.error("Error while creating a googlemap image:%s" %str(e))
+        print(("Error while creating a googlemap image:%s" %str(e)))
+        return False 
 

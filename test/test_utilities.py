@@ -53,8 +53,20 @@ def test_get_message_by_country_twitter():
     assert test_message == expected_message_twitter
 
 
+latitud = -1.07
+longitud = -77.30
+event_info = {'event_id':'igepn2022epfq'}
 
-    
+def test_generate_google_map():
+
+    expected_value = u.generate_google_map(latitud,longitud,event_info)
+
+    print(expected_value)
+
+
+
+test_generate_google_map()
+
 """
 test_short_url()
 test_get_closest_city()
