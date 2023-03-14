@@ -1,7 +1,7 @@
 from io import StringIO, BytesIO
 from PIL import Image
 import urllib
-
+import base64
 try:
     import seiscomp3.Logging as logging
 except:
@@ -111,13 +111,21 @@ def get_closest_city(latitude,longitude):
         logging.error(msg_error)
         return '--'
 
+def encode64(message):
+    
+    message_bytes = message.encode('utf-8')
+    base64_bytes = base64.b64encode(message_bytes)
+    base64_message = base64_bytes.decode('utf-8')
+    return base64_message
+
 def get_survey_url(local_time,event_id):
     
     cfg = read_parameters(config_path)
     date_event = local_time.strftime("%Y-%m-%d")
     time_event = local_time.strftime("%H:%M:%S")
-    if cfg['ig_info']['survey_type'] == "arcgis":
-        return short_url(cfg['ig_info']['arcgis_survey_url'] %(event_id,date_event,time_event))
+    event_date_time_coded = encode64(f"{event_id},{date_event},{time_event}")
+    if cfg['ig_info']['survey_type'] == "igepn":
+        return short_url(cfg['ig_info']['igepn_survey_url'] %event_date_time_coded )
     else:
         return short_url(cfg['ig_info']['google_survey_url'] %(event_id, date_event, time_event))
 
@@ -207,7 +215,7 @@ def generate_gis_map(latitud,longitud,event_info):
     If something goes wrong, returns a False so the caller can invoque another
     function to handle the map creation.  
     """
-    margin_degree = 1
+    margin_degree = 0.75
     image_size = 512
     cfg = read_parameters(config_path)
     gempa_gis_url =  cfg['ig_info']['gempa_gis_url']

@@ -23,6 +23,7 @@ def test_get_closest_city():
 
 event_datetime = datetime.strptime("2016-04-16T23:58:00","%Y-%m-%dT%H:%M:%S")
 event_id = "igepn2016hnmu"
+expected_igepn_url = "https://bit.ly/3Fn5eAr"
 expected_google_url = "https://bit.ly/3tdrfdF"
 expected_arcgis_url = "https://bit.ly/3mTk9tD"
 
@@ -31,7 +32,7 @@ def test_get_survey_url():
 
     #if cfg.survey_type == "arcgis":
     try:
-        assert expected_arcgis_url == test_survey_url, "ERROR in test_get_survey_url, arcgis"
+        assert expected_igepn_url == test_survey_url, "ERROR in test_get_survey_url, igepn"
     except :
         assert expected_google_url == test_survey_url, "ERROR in test_get_survey_url, google"
 
