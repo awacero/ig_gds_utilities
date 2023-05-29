@@ -180,7 +180,7 @@ def get_message_by_country_twitter(latitud,longitud):
         logging.error(msg_error)
         return '---'
 
-def generate_google_map(latitud,longitud,event_info):
+def generate_google_map(latitud,longitud,event_info,*args):
 
     """
     This function generate a JPG of the epicenter of an earthquake
@@ -193,7 +193,13 @@ def generate_google_map(latitud,longitud,event_info):
     eqevent_path = cfg['ig_info']['eqevent_page_path']
 
     try:
-        image_path = os.path.join(eqevent_path,'%s/%s-map.jpg' %(event_info['event_id'],event_info['event_id']))
+        if args:
+            map_type = args[0]
+            logging.info(f"Args suplied {args[0]}")
+            image_path = os.path.join(eqevent_path,'%s/%s-%s-map.jpg' %(event_info['event_id'],event_info['event_id'],map_type))
+
+        else:
+            image_path = os.path.join(eqevent_path,'%s/%s-map.jpg' %(event_info['event_id'],event_info['event_id']))
         if os.path.isfile(image_path):
             os.remove(image_path)
         map_image_url = "%s|%s,%s&key=%s" %(google_url,latitud,longitud,google_key)
@@ -207,7 +213,7 @@ def generate_google_map(latitud,longitud,event_info):
         return False 
 
 
-def generate_gis_map(latitud,longitud,event_info):
+def generate_gis_map(latitud,longitud,event_info,*args):
 
 
     """
@@ -222,7 +228,14 @@ def generate_gis_map(latitud,longitud,event_info):
     eqevent_path = cfg['ig_info']['eqevent_page_path']
 
     try:
-        image_path = os.path.join(eqevent_path,'%s/%s-map.jpg' %(event_info['event_id'],event_info['event_id']))
+
+        if args:
+            map_type = args[0]
+            logging.info(f"Args suplied {args[0]}")
+            image_path = os.path.join(eqevent_path,'%s/%s-%s-map.jpg' %(event_info['event_id'],event_info['event_id'],map_type))
+
+        else:
+            image_path = os.path.join(eqevent_path,'%s/%s-map.jpg' %(event_info['event_id'],event_info['event_id']))
         if os.path.isfile(image_path):
             os.remove(image_path)
 
