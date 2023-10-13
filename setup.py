@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setup(
      name='ig_gds_utilities',  
-     version='0.1.6',
+     version='0.1.8',
      packages=(
      find_packages(exclude=['*config_utilities.py'])),
      data_files=[('./ig_gds_utilities/config_utilities_EXAMPLE.cfg')],

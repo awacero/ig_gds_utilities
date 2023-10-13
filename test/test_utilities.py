@@ -1,4 +1,8 @@
-from ig_gds_utilities import ig_utilities as u
+#from ig_gds_utilities import ig_utilities as u
+import sys
+sys.path.insert(2,'../ig_gds_utilities')
+import ig_utilities as u
+
 from datetime import datetime
 
 
@@ -71,10 +75,22 @@ def test_generate_gis_map():
 
     print(expected_value)
 
+event_info_igmap = {'event_id':'igepn2016hnmu','mode':'revisado','time_local':'2016-04-16 18:58:00',
+               'magVal':'7.6','lat':'0.309','lon':'-80.1' }
+
+
+def test_generate_igmap():
+    expected_value = u.generate_igmap(event_info_igmap)
+
+    print(expected_value)
+
+
 test_generate_gis_map()
 
 
 test_generate_google_map()
+
+test_generate_igmap()
 """
 test_short_url()
 test_get_closest_city()

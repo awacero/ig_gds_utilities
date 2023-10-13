@@ -1,7 +1,8 @@
 from io import StringIO, BytesIO
 from PIL import Image
-import urllib
+from urllib import request,parse
 import base64
+
 try:
     import seiscomp3.Logging as logging
 except:
@@ -203,7 +204,7 @@ def generate_google_map(latitud,longitud,event_info,*args):
         if os.path.isfile(image_path):
             os.remove(image_path)
         map_image_url = "%s|%s,%s&key=%s" %(google_url,latitud,longitud,google_key)
-        buffer = BytesIO(urllib.request.urlopen(map_image_url).read())
+        buffer = BytesIO(request.urlopen(map_image_url).read())
         map_image = Image.open(buffer)
         map_image.convert('RGB').save(image_path)
         return True
@@ -212,6 +213,29 @@ def generate_google_map(latitud,longitud,event_info,*args):
         print(("Error while creating a googlemap image:%s" %str(e)))
         return False 
 
+def generate_igmap(event_info,*args):
+    cfg = read_parameters(config_path)    
+    igmap_url = cfg['ig_info']['igmap_url']    
+    eqevent_path = cfg['ig_info']['eqevent_page_path']
+    
+    try:
+        image_path = os.path.join(eqevent_path,'%s/%s-map.jpg' %(event_info['event_id'],event_info['event_id']))
+        if os.path.isfile(image_path):
+            os.remove(image_path)
+        map_image_url = "{}/create_igmap/create_igmap"\
+                  "?event_id={event_id}&status={mode}&event_datetime={time_local}"\
+                  "&magnitud={magVal}&latitud={lat}&longitud={lon}".format(igmap_url,**event_info)
+        map_image_url_encoded = parse.quote(map_image_url,safe=':/&=?')
+        print(map_image_url_encoded)
+        buffer = BytesIO(request.urlopen(map_image_url_encoded).read())
+        map_image = Image.open(buffer)
+        map_image.convert('RGB').save(image_path)
+
+        return True
+    except Exception as e:
+        logging.error("Error while creating a igmap image:%s" %str(e))
+        print(("Error while creating a igmap image:%s" %str(e)))
+        return False
 
 def generate_gis_map(latitud,longitud,event_info,*args):
 
@@ -243,7 +267,7 @@ def generate_gis_map(latitud,longitud,event_info,*args):
         
         map_image_url = "{0}/map?reg={1},{2},{3},{3}&ori={1},{2}&dim={4},{4}".format(
             gempa_gis_url,latitud,longitud,margin_degree,image_size)
-        buffer = BytesIO(urllib.request.urlopen(map_image_url).read())
+        buffer = BytesIO(request.urlopen(map_image_url).read())
         map_image = Image.open(buffer)
         map_image.convert('RGB').save(image_path)
 
